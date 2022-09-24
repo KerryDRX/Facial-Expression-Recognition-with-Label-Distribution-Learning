@@ -1,12 +1,12 @@
-<h1 align="center"> Facial Expression Recognition with Label Distribution Learning </h1> <br>
+<h1 align="center"> Facial Expression Recognition<br/>with Label Distribution Learning </h1>
 
 <p align="center">
-  <img src="https://www.pandasecurity.com/en/mediacenter/src/uploads/2019/03/pandasecurity-facial-recognition.jpg">
+  <img src="https://www.pandasecurity.com/en/mediacenter/src/uploads/2019/03/pandasecurity-facial-recognition.jpg" height='300'>
 </p>
 
-<div style="text-align: right"> Image Source: https://www.pandasecurity.com/en/mediacenter/security/facial-recognition-software/
+<div align="right"> Image Source: https://www.pandasecurity.com/en/mediacenter/security/facial-recognition-software/
 </div>
-
+<br>
 
 # Objectives
 This research project is focused on **Facial Expression Recognition (FER)** technology. Deep learning models for human emotion
@@ -15,17 +15,17 @@ and many optimization techniques are carried out with their effectiveness evalua
 the model training process. This project also investigates the advantages of label distribution learning for FER model, by
 applying multi-label facial image data to train the model, and measuring the accuracy increase of the multi-label learning scheme compared to the single-label version.
 
+# Database
+- [FERPlus](https://github.com/microsoft/FERPlus): the main dataset used in this project for model training and evaluation, which is a collection of approximately 35k facial grayscale images retrieved from another dataset [FER](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data), each annotated by ten taggers into one of ten emotion categories: neutral, happiness, surprise, sadness, anger, disgust, fear, contempt, unknown, not a face.
+- [ImageNet](https://www.image-net.org/), [AffectNet](http://mohammadmahoor.com/affectnet/): datasets for model pre-training.
+- [SFEW](https://cs.anu.edu.au/few/AFEW.html), [RAF-DB](http://www.whdeng.cn/raf/model1.html): additional training data.
+
 # Tools
 - Numpy, Pandas: for data exploration and processing.
 - Tensorflow, Keras: for VGG model construction and the implementation of optimization methods.
 - Pytorch: for implementation of advanced FER models.
 - Dlib: for face detector and ERT-based face alignment model.
 - ...
-
-# Database
-- [FERPlus](https://github.com/microsoft/FERPlus): the main dataset used in this project for model training and evaluation, which is a collection of approximately 35k facial grayscale images retrieved from another dataset [FER](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data), each annotated by ten taggers into one of ten emotion categories: neutral, happiness, surprise, sadness, anger, disgust, fear, contempt, unknown, not a face.
-- [ImageNet](https://www.image-net.org/), [AffectNet](http://mohammadmahoor.com/affectnet/): datasets for model pre-training.
-- [SFEW](https://cs.anu.edu.au/few/AFEW.html), [RAF-DB](http://www.whdeng.cn/raf/model1.html): additional training data.
 
 # Models
 - VGG: [paper](https://arxiv.org/pdf/1409.1556.pdf), [code](https://github.com/keras-team/keras/blob/v2.10.0/keras/applications/vgg16.py).
@@ -37,10 +37,23 @@ applying multi-label facial image data to train the model, and measuring the acc
 - Region Attention Network: [paper](https://arxiv.org/pdf/1905.04075v2.pdf), [code](https://github.com/kaiwang960112/Challenge-condition-FER-dataset).
 
 # Data Processing
-## 
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=1lCdc0advkazZh_DQkGjOAj0_tFnenKb-" align="center" height='400'/>
+</p>
+
+1. Data Cleaning: Non-facial images and images with unknown emotions are removed. Only eight specific emotions (neutral, happiness, surprise, sadness, anger, disgust, fear, contempt) are retained.
+2. Train-Test Split: Separate dataset into a training set and a test set in two different ways.
+    - Stratified Train-Test Split: obtain an ordinary test set.
+    - Split by Complexity: obtain a complex test set in which test images consist mostly of complicated emotions.
+3. Label Reduction: Reduce the number of labels by setting the target value of the least likely emotion to 0, keeping the number of positive emotion responses under a threshold N. (Randomly pick an emotion to zeroize if a tie exists.)
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=" align="center" height='400'/>
+</p>
+
+
 
 # Relevant Links
 - Detailed Report: https://drive.google.com/file/d/1ti-aA3u8cVBTwc1EDlIKhbtv5eitGjOl/view?usp=sharing
 - Poster: https://drive.google.com/file/d/14R3P9MfFLjbgcr9hc4kE94a6hSlfW89I/view?usp=sharing
-- Presentation Slides:
+- Presentation Slides: https://drive.google.com/file/d/1PnlVeji86MkM1cEs0J8ijguQlQcde0JS/view?usp=sharing
 - Website: https://wp.cs.hku.hk/2021/fyp21022/
