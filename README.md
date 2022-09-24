@@ -4,10 +4,6 @@
   <img src="https://www.pandasecurity.com/en/mediacenter/src/uploads/2019/03/pandasecurity-facial-recognition.jpg" height='300'>
 </p>
 
-<div align="right"> Image Source: https://www.pandasecurity.com/en/mediacenter/security/facial-recognition-software/
-</div>
-<br>
-
 # Objectives
 This research project is focused on **Facial Expression Recognition (FER)** technology. Deep learning models for human emotion
 prediction based on facial expressions are constructed and optimized based on several different model architectures,
@@ -15,7 +11,7 @@ and many optimization techniques are carried out with their effectiveness evalua
 the model training process. This project also investigates the advantages of label distribution learning for FER model, by
 applying multi-label facial image data to train the model, and measuring the accuracy increase of the multi-label learning scheme compared to the single-label version.
 
-# Database
+# Data Source
 - [FERPlus](https://github.com/microsoft/FERPlus): the main dataset used in this project for model training and evaluation, which is a collection of approximately 35k facial grayscale images retrieved from another dataset [FER](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data), each annotated by ten taggers into one of ten emotion categories: neutral, happiness, surprise, sadness, anger, disgust, fear, contempt, unknown, not a face.
 - [ImageNet](https://www.image-net.org/), [AffectNet](http://mohammadmahoor.com/affectnet/): datasets for model pre-training.
 - [SFEW](https://cs.anu.edu.au/few/AFEW.html), [RAF-DB](http://www.whdeng.cn/raf/model1.html): additional training data.
@@ -27,30 +23,117 @@ applying multi-label facial image data to train the model, and measuring the acc
 - Dlib: for face detector and ERT-based face alignment model.
 - ...
 
+# Data Distribution of FERPlus
+## Label Distribution
+- The proportion of each emotion label given to the images in FERPlus.
+<p align="center">
+<img src="./doc/figs/FERPlus-vote-dist.jpg" height='400'/>
+</p>
+
+## Image Complexity Dsitribution
+- Complexity of an image here is defined as the number of emotion tags assigned to the image.
+<p align="center">
+<img src="./doc/figs/FERPlus-complexity-dist.jpg" height='400'/>
+</p>
+
 # Models
 - VGG: [paper](https://arxiv.org/pdf/1409.1556.pdf), [code](https://github.com/keras-team/keras/blob/v2.10.0/keras/applications/vgg16.py).
-
 - Multi-task EfficientNet-B2: [paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9815154), [code](https://github.com/HSE-asavchenko/face-emotion-recognition).
-
 - Distract Attention Network: [paper](https://arxiv.org/pdf/2109.07270v4.pdf), [code](https://github.com/yaoing/dan).
-
 - Region Attention Network: [paper](https://arxiv.org/pdf/1905.04075v2.pdf), [code](https://github.com/kaiwang960112/Challenge-condition-FER-dataset).
+- ...
 
-# Data Processing
+# Data Preprocessing
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1lCdc0advkazZh_DQkGjOAj0_tFnenKb-" align="center" height='400'/>
+<img src="./doc/figs/preprocessing.png" height='400'/>
 </p>
 
 1. Data Cleaning: Non-facial images and images with unknown emotions are removed. Only eight specific emotions (neutral, happiness, surprise, sadness, anger, disgust, fear, contempt) are retained.
 2. Train-Test Split: Separate dataset into a training set and a test set in two different ways.
     - Stratified Train-Test Split: obtain an ordinary test set.
     - Split by Complexity: obtain a complex test set in which test images consist mostly of complicated emotions.
-3. Label Reduction: Reduce the number of labels by setting the target value of the least likely emotion to 0, keeping the number of positive emotion responses under a threshold N. (Randomly pick an emotion to zeroize if a tie exists.)
+3. Label Reduction: Reduce the labels of training images by setting the target probability of the least likely emotion to 0, keeping the number of positive emotion responses under a threshold N. (Randomly pick an emotion to zeroize if a tie exists.) Obtain N-hot label training datasets (N = 1, 2, ..., 8).
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=" align="center" height='400'/>
+<img src="./doc/figs/label-reduction.png" height='300'/>
 </p>
 
+# Accuracy Improvement Methods
 
+## Training Data Processing
+1. Data Augmentation: increase training sample size by applying random rotation and horizontal flipping.
+
+- Test result on VGG16 (B: baseline training set. F: flipped image set. R: rotated image set. RR: random rotation.):
+<p align="center">
+<img src="./doc/figs/DA-result.png" height='150'/>
+</p> 
+
+2. Face Alignment: detect and align the faces by ERT-based alignment technique before feeding images to the model.
+
+<p align="center">
+<img src="./doc/figs/FA.png" height='200'/>
+</p>
+
+- Test result on VGG16: approximately 0.5% of accuracy increase.
+
+## Model Training Scheme
+1. Loss Function
+
+- Test result on VGG16:
+
+<p align="center">
+<img src="./doc/figs/loss.png" height='250'/>
+</p>
+
+2. Weight Initailization by Model Pre-training
+
+- Test result on VGG16 (IN: pre-trained by ImageNet. AN: pre-trained by AffectNet. IN-AN: pre-trained by ImageNet and AffectNet):
+
+<p align="center">
+<img src="./doc/figs/pretraining.png" height='250'/>
+</p>
+
+3. Hyper Parameter Tuning: dropout, learning rate, optimizer, model layer structures, etc.
+
+(See the [project report](https://drive.google.com/file/d/1ti-aA3u8cVBTwc1EDlIKhbtv5eitGjOl/view?usp=sharing) for more details, including the effectiveness of optimization techniques on advanced models.)
+
+# Experiment Results
+## Model Comparison
+1. Classical CNN Models
+<p align="center">
+<img src="./doc/figs/classical-model.jpg" height='350'/>
+</p>
+
+2. Advanced CNN Models
+<p align="center">
+<img src="./doc/figs/advanced-model-acc.png" height='130'/>
+</p>
+
+## Effect of Label-Distribution Learning 
+1. Ordinary Test Set
+- N: maximum number of labels (positive emotions) retained in the training samples.
+<p align="center">
+<img src="./doc/figs/four-models.jpg" height='350'/>
+</p>
+
+2. Complex Test Set
+- Solid lines: ordinary test set (as comparison).
+- Dashed lines: complex test set.
+<p align="center">
+<img src="./doc/figs/four-models-comp.jpg" height='350'/>
+</p>
+
+# Conclusion
+Considering the complexity of human emotions, a single emotion label can hardly fully represent a person's feeling. More often than not, a person shows multiple emotions at the same time. Due to this reason, an emotion distribution should be the more proper way to represent the characteristics of the facial image.
+
+Adopting label distribution learning, the model learns more information from the training data, and accuracy rises correspondingly. The test results revealed that a maximum of 2 or 3 emotions per image is already showcasing great improvement on the model accuracy, and further increase the labels attached made relatively little contribution. This is consistent with the fact that most people could only betray no more than 3 basic emotions at the same time, as suggested by the complexity distribution of FERPlus dataset.
+
+The accuracy increment by label distribution learning is especially remarkable when the model is to evaluate copmlex facial images. As shown by the experiment result, when evaluating complicated faces, model performance degrades dramatically if trained by single-label images (10% accuracy decrease for traditional models like VGG16). 
+
+The lesson that can be learned is that, in order to construct a powerful FER model, a model that is more robust when being tested by copmlicated facial expressions (which often constitute a great proportion of facial images in the wild), label distributoin learning considerably outperforms single-label learning, in the sense that they provide a more accurate and comprehensive depiction of human faces.
+
+However, the situation is that, most currently available facial image datasets do not adopt multi-label tagging for their sample images, i.e., only giving a single label to each face. No more than a few small-scale datasets (FERPlus, RAF-DB, RAF-ML) attempted to give facial images multiple labels. This might be due to the extra time and labor required to build such a dataset. The lack of multi-label facial images hinders the construction of accurate FER models.
+
+The future work includes tagging more facial images by multiple labels, design of more advanced label distribution learning algorithm, and creation of models that are focused on predicting minor emotions of people. If the lack of multi-label data is unsolvable in a short time, a model can be devised to automatically predict the minor emotions (i.e., second and third most likely emotions) shown by a face. Then, the off-the-shelf single-label datasets can be thereafter upgraded to multi-label version, contributing to FER model training in the future.
 
 # Relevant Links
 - Detailed Report: https://drive.google.com/file/d/1ti-aA3u8cVBTwc1EDlIKhbtv5eitGjOl/view?usp=sharing
