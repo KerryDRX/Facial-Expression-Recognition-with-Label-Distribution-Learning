@@ -103,7 +103,7 @@ applying multi-label facial image data to train the model, and measuring the acc
 <img src="./doc/figs/classical-model.jpg" height='350'/>
 </p>
 
-2. Advanced CNN Models
+2. Advanced CNN Models (compared to VGG)
 <p align="center">
 <img src="./doc/figs/advanced-model-acc.png" height='130'/>
 </p>
@@ -132,6 +132,8 @@ Considering the complexity of human emotions, a single emotion label can hardly 
 The lesson that can be learned is that, in order to construct a powerful FER model, a model that is more robust when being tested by copmlicated facial expressions (which often constitute a great proportion of facial images in the wild), label distributoin learning considerably outperforms single-label learning, in the sense that they provide a more accurate and comprehensive depiction of human faces.
 
 However, the situation is that, most currently available facial image datasets do not adopt multi-label tagging for their sample images, i.e., only giving a single label to each face. No more than a few small-scale datasets ([FERPlus](https://github.com/microsoft/FERPlus), [RAF-DB](http://www.whdeng.cn/raf/model1.html), [RAF-ML](http://whdeng.cn/RAF/model2.html)) attempted to give facial images multiple labels. This might be due to the extra time and labor required to build such a dataset. **The lack of multi-label facial images hinders the construction of accurate FER models.**
+
+# Future Work
 
 The future work includes tagging more facial images by multiple labels, design of more advanced label distribution learning algorithm, and **creation of models that are focused on predicting minor emotions of people**. If the lack of multi-label data is unsolvable in a short time, a model can be devised to automatically **predict the minor emotions** (i.e., second and third most likely emotions) shown by a face. Then, the off-the-shelf single-label datasets can be thereafter upgraded to multi-label version, contributing to FER model training in the future.
 
