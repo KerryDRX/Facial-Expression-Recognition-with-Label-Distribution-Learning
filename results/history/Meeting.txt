@@ -1,0 +1,30 @@
+Model performance:
+
+Original test set:
+   		Model		    Highest Accuracy
+	Multi-task EfficientNet  	88.60%
+	DAN				88.51%
+	RAN				87.04%
+	VGG16				86.17%
+
+Complex emotion test set:
+   		Model		    1-label Accuracy	Highest Accuracy
+	Multi-task EfficientNet  	67.73%		70.61% (3-label)
+	DAN				66.50%		70.91% (7-label)
+
+
+=================================== Future Plan =======================================
+
+	(1) Read paper & improve loss function
+
+	(2) Change cost function
+		  (PLD) probabilistic label drawing (on FERPlus paper)
+
+	(3) try other models (FER-VT)
+
+
+
+
+
+
+		
